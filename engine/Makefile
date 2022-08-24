@@ -12,10 +12,10 @@ LDFLAGS += -ldl
 all: $(EXE)
 
 $(EXE): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(OBJ) -o $(BIN)/$(EXE) `pkg-config --libs $(PACKAGES)` $(EXTRA_LIBS)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(EXE) `pkg-config --libs $(PACKAGES)` $(EXTRA_LIBS)
 
 clean:
-	rm -f $(BIN)/*
+	rm -f $(BIN)/* $(EXE)
 
 $(BIN)/%.o : $(SRC)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

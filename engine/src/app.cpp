@@ -14,7 +14,6 @@ App::App()
 	// set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("Engine");
-
 	desc.set_size(clan::Sizef(800, 600), true);
 	desc.set_allow_resize(true);
 
@@ -22,19 +21,22 @@ App::App()
 	canvas = clan::Canvas(window);
 
 	// connect the window close event
-	//sc.connect(window.sig_window_close(), [&]() {_quit = true; });
+	sc.connect(window.sig_window_close(), [&]() {_quit = true; });
 
 	// connect a keyboard handler to on_key_up()
-	//sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_keyboard));
+	sc.connect(window.get_keyboard().sig_key_up(), clan::bind_member(this, &App::on_keyboard));
 
 	// connect a mouse handler (only for example it is not used)
-	//sc.connect(window.get_mouse().sig_key_down(), this, &App::on_mouse);
-	//sc.connect(window.get_mouse().sig_key_dblclk(), this, &App::on_mouse);
+	sc.connect(window.get_mouse().sig_key_down(), this, &App::on_mouse);
+	sc.connect(window.get_mouse().sig_key_dblclk(), this, &App::on_mouse);
 
 	_quit = false;
-	srand(static_cast<int>(time(0)));	// initialize random number generator
+	
+	// initialize random number generator
+	srand(static_cast<int>(time(0)));
 
-	init();		//initialize
+	//initialize business logic
+	init();		
 }
 
 bool App::update()
@@ -44,6 +46,7 @@ bool App::update()
 
 	render();
 
+	// double buffering
 	window.flip(1);
 
 	return !_quit;
@@ -63,3 +66,21 @@ void App::compute()
 {
 
 } // compute
+
+
+
+// keyboard key was pressed
+void App::on_keyboard(const clan::InputEvent &key)
+{
+	switch (key.id) {
+		case clan::keycode_escape:
+		case clan::keycode_q:
+			_quit = true; break;
+	}
+}
+
+// mouse key was pressed
+void App::on_mouse(const clan::InputEvent &key)
+{
+
+}

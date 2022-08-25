@@ -1,7 +1,7 @@
 EXE=engine
 BIN=bin
 SRC=src
-OBJ=$(BIN)/app.o $(BIN)/precomp.o
+OBJ=$(BIN)/app.o $(BIN)/field.o $(BIN)/map.o
 LIBS=clanApp clanDisplay clanCore clanGL
 
 PACKAGES = $(patsubst %,%-4.1,$(LIBS))

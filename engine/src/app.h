@@ -19,4 +19,5 @@ private:
 	clan::Canvas canvas;
     
     bool _quit;
+    class Map* _map;							// map of tiles
 };

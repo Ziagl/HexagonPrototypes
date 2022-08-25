@@ -1,5 +1,6 @@
 #include "precomp.h"
 #include "app.h"
+#include "map.h"
 
 clan::ApplicationInstance<App> clanapp;
 
@@ -54,12 +55,17 @@ bool App::update()
 
 void App::init(void)
 {
-	
+	// initialize map
+	_map = new Map(canvas);
+
+
 } // init
 
 void App::render(void)
 {
-	
+	_map->render();
+
+	window.flip(0);
 } // render
 
 void App::compute()

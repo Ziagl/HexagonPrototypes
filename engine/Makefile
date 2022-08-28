@@ -6,7 +6,7 @@ LIBS=clanApp clanDisplay clanCore clanGL
 
 PACKAGES = $(patsubst %,%-4.1,$(LIBS))
 # CXXFLAGS += `pkg-config --cflags $(PACKAGES)` -mthreads
-CXXFLAGS += `pkg-config --cflags $(PACKAGES)` -pthread
+CXXFLAGS += `pkg-config --cflags $(PACKAGES)` -pthread -ggdb -std=c++17
 LDFLAGS += -ldl
 
 all: $(EXE)

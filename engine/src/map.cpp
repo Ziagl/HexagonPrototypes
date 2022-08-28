@@ -6,18 +6,41 @@ Map::Map(clan::Canvas& canvas)
 	readTiles();
     readLevelFile(convertPath("./Data/Maps/map1.txt"));		    // load first map by default
 	srand(clock_t(0));
-	clearPotentials();
+	_height = 0;
+	_width = 0;
 }
 
 Map::~Map(void)
 {
+	delete[] _fields;
 }
 
-void Map::readLevelFile(std::string file) {
+void Map::readLevelFile(std::string file) 
+{
 	std::string line;
 	std::ifstream iFile(file);
 	int x;
-	for (int y = 0; !iFile.eof(); y++) {
+	// first compute width and height
+	for (int y = 0; !iFile.eof(); ++y) 
+	{
+		getline(iFile, line);
+		x = 0;
+		if(y==0)
+		{
+			for (std::string::iterator it = line.begin(); it != line.end(); ++it) 
+			{
+				_width++;
+			}
+		}
+		_height = y + 1;
+	}
+	iFile.clear();
+	iFile.seekg(0);
+	// read map
+	_fields = new Field*[_height];
+	for (int y = 0; !iFile.eof(); ++y)
+	{
+		_fields[y] = new Field[_width];
 		getline(iFile, line);
 		x = 0;
 		for (std::string::iterator it = line.begin(); it != line.end(); ++it) {
@@ -40,12 +63,13 @@ void Map::render()
 	scaleFactor = TILES_SCALE_FACTOR;
 #endif
 
-	for (int x = 0; x < LEVEL_WIDTH; x++)
+	for (int x = 0; x < _width; x++)
 	{
-		for (int y = 0; y < LEVEL_HEIGHT; y++)
+		for (int y = 0; y < _height; y++)
 		{
 			tile = _fields[x][y].getTile();
-			if (tile != NULL) {
+			if (tile != NULL) 
+			{
 				x_koord = static_cast<float>((x*scaleFactor*TILES_SIZE_X) + ((y % 2 == 0) ? TILES_OFFSET_X * scaleFactor : 0));
 				y_koord = static_cast<float>((y*scaleFactor*TILES_OFFSET_Y));
 				tile->set_scale(scaleFactor, scaleFactor);
@@ -56,7 +80,8 @@ void Map::render()
 }
 
 // create tile for given position and information from map file
-void Map::parseTiles(char identifier, Position2D position) {
+void Map::parseTiles(char identifier, Position2D position) 
+{
 	int value = 0;
 	int r = 0;
 
@@ -79,6 +104,7 @@ void Map::parseTiles(char identifier, Position2D position) {
 		case '6': surface = _tilesMap["mountain_l"]; value = 5; break;
 		default: break;				
 	}
+
 	_fields[position._x][position._y] = Field(surface, value);
 }
 
@@ -104,37 +130,11 @@ void Map::readTiles(void)
 	_tilesMap.insert(std::map<std::string, clan::Image*>::value_type("path_enemy2", new clan::Image(_canvas, convertPath("./Data/Tiles/path_enemy2.png"))));
 }
 
-void Map::clearPotentials()
-{
-	for (int x = 0; x < LEVEL_WIDTH; x++)
-	{
-		for (int y = 0; y < LEVEL_HEIGHT; y++)
-		{
-			_potentials[x][y] = 1;
-		}
-	}
-}
-
-void Map::setPotentials(Position2D pos, int maxValue, int deep)
-{
-	// increase potentials around position
-	if (deep > 0)
-	{
-		_potentials[pos._x][pos._y] += maxValue;
-		for (int i = 0; i < NEIGHBOURS; ++i)
-		{
-			Position2D d = pos.neighbour(i);
-			if (isValid(d))
-				setPotentials(d, maxValue - 1, deep - 1);
-		}
-	}
-}
-
 int Map::isValid(Position2D &p)
 {
 	// check if this field is valid
 	// special fields also are not valid --> 0...for water!
-	if (p._x < 0 || p._x >= LEVEL_WIDTH || p._y < 0 || p._y >= LEVEL_HEIGHT)
+	if (p._x < 0 || p._x >= _width || p._y < 0 || p._y >= _height)
 		return 0;
 	return 1;
 }

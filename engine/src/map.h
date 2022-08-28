@@ -13,19 +13,17 @@ public:
 	Map(clan::Canvas& canvas);
 	~Map(void);
 	void render();									// renders a map
-	void readLevelFile(std::string file);			// read a level file from disk
-
-	void clearPotentials();											// clear potential fields
-	void setPotentials(Position2D pos, int maxValue, int deep);		// create potential fields around position
-
+	
 private:
+	void readLevelFile(std::string file);			// read a level file from disk
 	void parseTiles(char identifier, Position2D position);
 	void readTiles();
 	int isValid(Position2D &p);
-    std::string convertPath(std::string path);               // converts a file path to windows if needed
+    std::string convertPath(std::string path);          // converts a file path to windows if needed
 
 	clan::Canvas _canvas;
-    Field _fields[LEVEL_WIDTH][LEVEL_HEIGHT];			// all tiles of a map
-	int _potentials[LEVEL_WIDTH][LEVEL_HEIGHT];
+    Field** _fields;									// all tiles of a map
+	int _width;
+	int _height;
 	std::map<std::string, clan::Image*> _tilesMap;		// all images used by this map
 };

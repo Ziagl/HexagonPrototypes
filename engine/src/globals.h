@@ -1,9 +1,5 @@
 #pragma once
 
-// board Dimension
-#define LEVEL_WIDTH 15
-#define LEVEL_HEIGHT 12
-
 // map params
 #define TILES_SCALE_FACTOR 1
 #define TILES_SCALE_FACTOR_SMALL 0.5

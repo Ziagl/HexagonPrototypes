@@ -3,11 +3,11 @@
 Map::Map(clan::Canvas& canvas)
 {
 	_canvas = canvas;
+	_height = 0;
+	_width = 0;
 	readTiles();
     readLevelFile(convertPath("./Data/Maps/map1.txt"));		    // load first map by default
 	srand(clock_t(0));
-	_height = 0;
-	_width = 0;
 }
 
 Map::~Map(void)
@@ -25,7 +25,7 @@ void Map::readLevelFile(std::string file)
 	{
 		getline(iFile, line);
 		x = 0;
-		if(y==0)
+		if(y == 0)
 		{
 			for (std::string::iterator it = line.begin(); it != line.end(); ++it) 
 			{
@@ -63,9 +63,9 @@ void Map::render()
 	scaleFactor = TILES_SCALE_FACTOR;
 #endif
 
-	for (int x = 0; x < _width; x++)
+	for (int x = 0; x < _height; ++x)
 	{
-		for (int y = 0; y < _height; y++)
+		for (int y = 0; y < _width; ++y)
 		{
 			tile = _fields[x][y].getTile();
 			if (tile != NULL) 
@@ -105,7 +105,7 @@ void Map::parseTiles(char identifier, Position2D position)
 		default: break;				
 	}
 
-	_fields[position._x][position._y] = Field(surface, value);
+	_fields[position._y][position._x] = Field(surface, value);
 }
 
 // get all defined images for tiles, enemy, start, goal/target and path
